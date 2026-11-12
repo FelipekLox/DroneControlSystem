@@ -4,6 +4,8 @@ namespace DroneControlSystem
 {
     public class Drone
     {
+        private const int BatteryConsumptionPerMinute = 2;
+
         public string Model { get; set; }
         public int BatteryLevel { get; set; }
         public double Altitude { get; set; }
@@ -15,6 +17,10 @@ namespace DroneControlSystem
             BatteryLevel = batteryLevel;
             Altitude = 0;
             IsEngineOn = false;
+        }
+
+        public Drone(string model) : this(model, 100)
+        {
         }
 
         public void PrintInfo()
@@ -46,6 +52,17 @@ namespace DroneControlSystem
                 BatteryLevel = 100;
             }
             Console.WriteLine($"Заряд после подзарядки: {BatteryLevel}%");
+        }
+
+        public int CalculateFlightTime()
+        {
+            if (!IsEngineOn)
+            {
+                Console.WriteLine("Двигатель выключен. Время полёта не может быть рассчитано.");
+                return 0;
+            }
+
+            return BatteryLevel / BatteryConsumptionPerMinute;
         }
     }
 }
