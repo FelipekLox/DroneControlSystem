@@ -10,7 +10,10 @@ namespace DroneControlSystem
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=== Система управления БПЛА (версия 2.0) ===\n");
+
+            Console.WriteLine("******************************************");
+            Console.WriteLine("*** Система управления БПЛА (версия 2.0) ***");
+            Console.WriteLine("******************************************\n");
 
             Drone[] drones = new Drone[]
             {
