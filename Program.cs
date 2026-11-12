@@ -1,9 +1,12 @@
 ﻿using System;
+using System.IO;
 
 namespace DroneControlSystem
 {
     internal class Program
     {
+        private const string FileName = "drones.txt";
+
         static void Main(string[] args)
         {
             Drone[] drones = new Drone[]
@@ -42,6 +45,10 @@ namespace DroneControlSystem
                     switch (choice)
                     {
                         case 1:
+                            if (drones.Length == 0)
+                            {
+                                Console.WriteLine("Список дронов пуст.");
+                            }
                             for (int i = 0; i < drones.Length; i++)
                             {
                                 Console.WriteLine($"\n[Индекс: {i}]");
@@ -98,11 +105,12 @@ namespace DroneControlSystem
                             break;
 
                         case 5:
-                            Console.WriteLine("Функция сохранения в файл будет добавлена в следующем задании.");
+                            SaveDrones(drones, FileName);
                             break;
 
                         case 6:
-                            Console.WriteLine("Функция загрузки из файла будет добавлена в следующем задании.");
+                            drones = LoadDrones(FileName);
+                            Console.WriteLine($"Загружено дронов: {drones.Length}");
                             break;
 
                         default:
@@ -118,6 +126,38 @@ namespace DroneControlSystem
 
             Console.WriteLine("\nПрограмма завершена. Нажмите любую клавишу для выхода...");
             Console.ReadKey();
+        }
+
+        static void SaveDrones(Drone[] drones, string fileName)
+        {
+            string[] lines = new string[drones.Length];
+            for (int i = 0; i < drones.Length; i++)
+            {
+                lines[i] = $"{drones[i].Model};{drones[i].BatteryLevel};{drones[i].Altitude};{drones[i].IsEngineOn}";
+            }
+            File.WriteAllLines(fileName, lines);
+            Console.WriteLine($"Состояние сохранено в файл {fileName}");
+        }
+
+        static Drone[] LoadDrones(string fileName)
+        {
+            if (!File.Exists(fileName))
+            {
+                Console.WriteLine("Файл не найден. Будет создан новый массив.");
+                return new Drone[0];
+            }
+            string[] lines = File.ReadAllLines(fileName);
+            Drone[] drones = new Drone[lines.Length];
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string[] parts = lines[i].Split(';');
+                drones[i] = new Drone(parts[0], int.Parse(parts[1]))
+                {
+                    Altitude = double.Parse(parts[2]),
+                    IsEngineOn = bool.Parse(parts[3])
+                };
+            }
+            return drones;
         }
     }
 }
