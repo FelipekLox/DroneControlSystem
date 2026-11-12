@@ -11,6 +11,10 @@ namespace DroneControlSystem
         public double Altitude { get; set; }
         public bool IsEngineOn { get; set; }
 
+        public Drone()
+        {
+        }
+
         public Drone(string model, int batteryLevel)
         {
             Model = model;
